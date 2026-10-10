@@ -1,0 +1,12 @@
+slug,name,related_path_count,variants,code_status
+retinaface,RetinaFace,16,ResNet-50；MobileNet-0.25；FaceX-Zoo SDK,catalog_only
+mtcnn,MTCNN,312,PNet / RNet / ONet；det1–det4；历史检查点,existing_MTCNN-pytorch
+cars-sdk,CARS SDK detectors,100,CARSDetect（58 路径）；CARS1/2/3（42 路径，类型待确认）,catalog_only
+centerface,CenterFace,29,原版、BN merged；ONNX/NCNN/TensorRT,catalog_only
+faceboxes,FaceBoxes,6,标准版、without-dense,catalog_only
+yunet,YuNet / YuFaceDetect,10,v1、v2、ONNX 变体,catalog_only
+ultraface,UltraFace,28,Slim/Tiny、RFB，320/640,catalog_only
+dsfd,DSFD,6,ResNet-152、R18、Light DSFD,catalog_only
+yolov5-face,YOLOv5-Face,3,Small、Medium、Large,catalog_only
+blazeface,BlazeFace / MediaPipe face detection,9,short-range / full-range；TFLite/ONNX/TRT,catalog_only
+opencv-ssd,OpenCV SSD face detector,3,ResNet-10 SSD,catalog_only

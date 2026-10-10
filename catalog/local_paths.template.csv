@@ -1,0 +1,9 @@
+id,path,expected_sha256
+rf_r50,,
+rf_mnet025_v1,,
+yolov5s_face,,
+centerface,,
+ultraface_slim,,
+yufacedetect_v2,,
+carsdetect,,
+dsfd_r152,,

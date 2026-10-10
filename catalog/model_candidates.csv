@@ -1,0 +1,42 @@
+id,family,variant,filename,format,size_mb_approx,role,repository_status
+rf_r50,retinaface,R50 ONNX,R50_onnx.onnx,ONNX,112.59,model,local_candidate
+rf_r50_cache,retinaface,R50 cache,R50_onnx.cache,cache,169.81,runtime_cache_unverified,local_candidate
+rf_mnet025_v1,retinaface,MNet025 v1,mnet025_v1.onnx,ONNX,1.97,model,local_candidate
+rf_mnet025_v2,retinaface,MNet025 gamma-v2,mnet025_fix_gamma_v2.onnx,ONNX,1.97,model,local_candidate
+rf_mnet25_caffe,retinaface,MNet025 Caffe,mnet25.caffemodel,Caffe,1.69,model,local_candidate
+rf_mnet_deconv,retinaface,MNet Caffe deconv,mnet-deconv-0517.caffemodel,Caffe,1.69,model,local_candidate
+rf_mnet_engine,retinaface,MNet encrypted engine candidate,mnet.txt,unknown,5.13,engine_unverified,local_candidate
+rf_facexzoo,retinaface,FaceX-Zoo face detector,face_detection_retina.pkl,PyTorch,1.74,model,local_candidate
+mtcnn_pnet_repo,mtcnn,PNet repo,pnet_20181218_final.pkl,PyTorch,0.05,model,tracked_in_repo
+mtcnn_rnet_repo,mtcnn,RNet repo,rnet_20181218_final.pkl,PyTorch,0.77,model,tracked_in_repo
+mtcnn_onet_repo,mtcnn,ONet repo,onet_20181218_final.pkl,PyTorch,2.95,model,tracked_in_repo
+mtcnn_det1,mtcnn,Caffe stage 1,det1.caffemodel,Caffe,0.03,model_part,local_candidate
+mtcnn_det3,mtcnn,Caffe stage 3,det3.caffemodel,Caffe,1.49,model_part,local_candidate
+carsdetect,cars-sdk,CARSDetect,CARSDetect.bin,private SDK,1.68,model_encrypted,local_candidate
+carsdetect_cfg,cars-sdk,CARSDetect config,CARSDetect.para.bin,private SDK,0.04,config,local_candidate
+cars_stage1,cars-sdk,CARS1 legacy,CARS1.bin,private SDK,0.03,model_unverified,local_candidate
+cars_stage2,cars-sdk,CARS2 legacy,CARS2.bin,private SDK,0.39,model_unverified,local_candidate
+cars_stage3,cars-sdk,CARS3 legacy,CARS3.bin,private SDK,1.49,model_unverified,local_candidate
+centerface,centerface,CenterFace ONNX,centerface.onnx,ONNX,7.18,model,local_candidate
+centerface_bn,centerface,CenterFace BN-merged,centerface_bnmerged.onnx,ONNX,6.97,model,local_candidate
+centerface_ncnn,centerface,CenterFace NCNN,centerface.bin,NCNN,6.94,model,local_candidate
+centerface_trt,centerface,CenterFace TensorRT,centerface.trt,TensorRT,9.53,engine_unverified,local_candidate
+faceboxes_caffe,faceboxes,FaceBoxes standard,faceboxes_iter_120000.caffemodel,Caffe,3.88,model,local_candidate
+faceboxes_nodense,faceboxes,FaceBoxes without-dense,faceboxes.caffemodel,Caffe,3.41,model,local_candidate
+yufacedetect_v1,yunet,YuFaceDetect v1,yufacedetectnet-open-v1.caffemodel,Caffe,2.58,model,local_candidate
+yufacedetect_v2,yunet,YuFaceDetect v2,yufacedetectnet-open-v2.caffemodel,Caffe,3.34,model,local_candidate
+yunet_onnx,yunet,YuNet variant,yunet_n_640_640.onnx,ONNX,0.30,model_unverified,local_candidate
+ultraface_slim,ultraface,Slim 320,version-slim-320.onnx,ONNX,1.14,model,local_candidate
+ultraface_rfb,ultraface,RFB 320,version-RFB-320.onnx,ONNX,1.21,model,local_candidate
+dsfd_r152,dsfd,DSFD ResNet-152,WIDERFace_DSFD_RES152.pth,PyTorch,458.72,model,local_candidate
+dsfd_r18,dsfd,DSFD R18,dsfdv2_r18.pth,PyTorch,54.37,model,local_candidate
+dsfd_light,dsfd,Light DSFD,light_DSFD.pth,PyTorch,3.88,model,local_candidate
+yolov5s_face,yolov5-face,YOLOv5s-Face,yolov5s-face.onnx,ONNX,26.97,model,local_candidate
+yolov5m_face,yolov5-face,YOLOv5m-Face,yolov5m-face.onnx,ONNX,80.31,model,local_candidate
+yolov5l_face,yolov5-face,YOLOv5l-Face,yolov5l-face.onnx,ONNX,177.79,model,local_candidate
+blazeface_short,blazeface,short-range,face_detection_short_range.tflite,TFLite,0.22,model,local_candidate
+blazeface_full,blazeface,full-range,face_detection_full_range_sparse.tflite,TFLite,0.65,model,local_candidate
+blazeface_triton,blazeface,Triton model,model.onnx,ONNX,0.40,model,local_candidate
+opencv_ssd,opencv-ssd,ResNet-10 SSD,res10_300x300_ssd_iter_140000.caffemodel,Caffe,10.17,model,local_candidate
+unknown_mobile_trt,unknown,mobile.trt,mobile.trt,TensorRT,5.26,unverified,local_candidate
+unknown_small_detect,unknown,small_detect.model,small_detect.model,private,1.94,unverified,local_candidate
