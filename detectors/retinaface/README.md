@@ -1,20 +1,41 @@
-# RetinaFace
+# RetinaFace model family
 
-- **算法家族**：RetinaFace
-- **扫描变体**：ResNet-50；MobileNet-0.25；FaceX-Zoo SDK
-- **本地相关文件路径**：16（含重复路径、结构/配置和不同后端；非独立权重数）
-- **代码状态**：目前仅登记本地候选；尚未迁入实现、权重或模型验证代码。
+**State: source and weight discovery only. No new RetinaFace weights or external source trees are committed here.**
 
-## 模型线索
+## Local scan snapshot (2026-10-10)
 
-- `R50_onnx.onnx` （112.59 MB，R50 候选）
-- `mnet025_v1.onnx` （1.97 MB）
-- `mnet025_fix_gamma_v2.onnx` （1.97 MB）
-- `mnet25.caffemodel` （1.69 MB）
-- `mnet.txt` （5.13 MB，疑似加密 TRT，未验证）
+The user-supplied `retinaface_files.csv` contains **55 file records**, from three existing local source groups:
 
-## 注意
+| Source alias | Records | What is present |
+|---|---:|---|
+| `onnx_models` | 3 | Two MobileNet-0.25 ONNX variants and one R50 ONNX candidate |
+| `legacy_retinaface` | 41 | Two Caffe weights and prototxt pairs; C++ inference; MXNet-to-Caffe conversion; an INT8 calibration project |
+| `tensorrtx_retinaface` | 11 | `retina_mnet.cpp`, `retina_r50.cpp`, decode, calibrator, build files |
 
-R50 骨干、检测头及五点输出仍需解析 ONNX；.cache 文件不是已确认可移植的权重。
+The complete **path-sanitized** file list is in [catalog/retinaface_snapshot.csv](../../catalog/retinaface_snapshot.csv). A path record is not a model, and rounded MB sizes are not precise integrity checks.
 
-下一步按 [迁移计划](../../docs/MIGRATION.md) 逐个确认来源、许可、哈希、输入输出和统一评测；禁止仅因名称相同就覆盖本地旧文件。
+## Current weight candidates
+
+| Variant | Local filename | Size (rounded) | Graph/runtime |
+|---|---|---:|---|
+| MNet025 v1 | `mnet025_v1.onnx` | 1.97 MB | ONNX |
+| MNet025 gamma-v2 | `mnet025_fix_gamma_v2.onnx` | 1.97 MB | ONNX |
+| R50 | `R50_onnx.onnx` | 112.59 MB | ONNX, graph unverified |
+| MNet25 Caffe | `mnet25.caffemodel` + `mnet25.prototxt` | 1.69 MB | Caffe |
+| MNet deconv 0517 | `mnet-deconv-0517.caffemodel` + `mnet-deconv-0517.prototxt` | 1.69 MB | Caffe |
+
+Five model-weight files were found across these roots. It is **not yet established** whether the paired MNet variants are independent trained models, exact exports, or graph transformations; verify structural correspondence and outputs before merging identities.
+
+## Current organization plan
+
+- `models/`: planned manifest of training version, provenance, input/output, checksum, and authorized download location; **not a place to blindly commit large/private weights**.
+- `backends/onnx/`: future ONNX Runtime implementation.
+- `backends/caffe/`: future Caffe/OpenCV DNN implementation.
+- `backends/tensorrt/`: future TensorRT implementation, **subject to original source licenses and environment compatibility**.
+- `tests/`: future standard I/O and numeric benchmark.
+
+These directories are only proposed until each implementation and license are verified. Existing original code remains in its original local directories for now.
+
+See [RetinaFace review and migration](../../docs/RETINAFACE_REVIEW.md) and [general migration policy](../../docs/MIGRATION.md).
+
+**Not yet verified:** actual R50 backbone, landmark output, preprocessing, plugin dependencies, encryption, license suitability, TensorRT compatibility, SHA256, and WIDER FACE performance. Existing `.cache` and `.wts` files were not captured by the extension filter in this scan.
