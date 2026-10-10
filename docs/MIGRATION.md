@@ -1,46 +1,48 @@
-# 迁移计划（非破坏性）
+# 迁移计划：训练 + 推理 + 评测（非破坏性）
 
-目标：逐步把当前 `Face-detection` 扩展为可比较、可追溯的检测算法集合，**不一次性搬运旧代码仓库或所有权重**。
+目标：建立覆盖**训练、验证、导出、推理、性能评测**的人脸检测研究仓库，不是将一堆历史权重直接复制到 GitHub。
 
-## Phase 0：冻结和索引（本分支）
+## Phase 0：资产盘点与现状冻结（当前草稿 PR）
 
-- 保留 `MTCNN-pytorch/` 原有路径、代码、三个 `.pkl` 权重与提交历史，不改动、不删除。
-- 建立 `detectors/<family>/` 算法家族入口、`catalog/` 模型索引及评测规范。
-- 本次 GitHub 只含文档、CSV 和只读本地核验脚本；未从用户 D/G/I 盘上传任何权重。
+- 保留 `MTCNN-pytorch/` 原有训练脚本、推理、模型及提交历史；**不移动、不删除，不覆盖**。
+- 保留 `detectors/<family>/` 算法家族入口，明确区分 `训练源码已发现`、`推理源码已发现`、`仅权重`、`已验证` 四类状态。
+- 按 [训练/推理约定](TRAINING_INFERENCE.md) 为未来真实代码留出规范，**没有源码的模块不创建假入口**。
+- 路径/文件索引属于本地快照，不等同模型训练可复现证明。公有目录不公开私人 Windows 完整路径。
 
-## Phase 1：核实本地资产
+## Phase 1：验证 MTCNN 基准
 
-1. 用私有的 `catalog/local_paths.csv` 对应 `model_candidates.csv` 中的 `id` 与 Windows 完整路径。
-2. 运行 `scripts/verify_local_assets.ps1`，读取大小及 SHA256；结果写到被忽略的 `artifacts/`。
-3. 识别字节级副本；**不得仅凭文件名和 MB 大小删除文件**。
-4. 按一条记录一份“原训练模型”的规则关联多种导出：例如 CenterFace ONNX/NCNN/TRT，RetinaFace MNet Caffe/ONNX/缓存。未验证同源时保留分离记录。
+1. 检查 `train_pnet.py`、`train_rnet.py`、`train_onet.py`、数据生成和 `MTCNN.py`；
+2. 梳理训练脚本需要的 `../dataset/`、Python/PyTorch/OpenCV 版本、标注格式；
+3. 用已存在的三个阶段权重完成单张图 smoke test，然后验证小规模训练/检查点保存及恢复；
+4. 写明实际跑通的命令、依赖、限制、固定测试输入与结果；**运行前只标记源码存在**。
 
-## Phase 2：引入可运行实现（按优先级）
+## Phase 2：恢复 RetinaFace 完整谱系
 
-- 第一组：现有 MTCNN（建立依赖说明和 smoke test）。
-- 第二组：RetinaFace MNet025 与 R50（统一前后处理后比较）。
-- 第三组：CenterFace、UltraFace、YuNet、YOLOv5-Face。
-- 第四组：FaceBoxes、DSFD、BlazeFace、OpenCV SSD。
-- CARSDetect 和 CARS1/2/3 作为历史 SDK 模型，依赖解密或专有 API，单独评估。
+1. 对 `mnet025_v1.onnx`、`mnet025_fix_gamma_v2.onnx`、`R50_onnx.onnx` 和 Caffe 模型检查输入/输出/网络结构与哈希；
+2. 查明原始 MXNet/PyTorch 训练项目和可公开再分发的许可证，检查是否本地另存训练代码；
+3. 对现有 `retinaface-master` 和 `tensorrtx-master/retinaface` 分别归档转换和推理后端；**不能把转换或 TRT 构建代码当训练源码**；
+4. 如训练代码合法可得，新增训练配置和训练入口；与 ONNX/Caffe/TensorRT 推理形成同一模型版本链；
+5. 用带授权标签的测试数据做框/关键点结果、吞吐、延迟对比。
 
-每迁入一个实现：记录上游来源/commit、LICENSE、是否修改、运行平台、依赖、前处理、输出格式、权重校验值、运行命令和一次可复现结果。**版权或再分发权限未知时不要复制第三方源码和 SDK 二进制到公开仓库**。
+## Phase 3：逐家族扩展
 
-## Phase 3：权重存储策略
+CenterFace、UltraFace、FaceBoxes、YuNet、DSFD、YOLOv5-Face、BlazeFace、OpenCV SSD。根据训练源可获得性区分 `training+inference` 和 `inference-only`；不存在的训练部分留待补齐。
 
-- 默认不跟踪 `local_assets/`（供本地试验）。
-- 对取得再分发权的公开权重，在模型说明中保存 SHA256/来源及下载方式；只有确需入库时才考虑 Git LFS。
-- 大于 GitHub 普通 Git 单文件上限的权重不能按普通文件上传，例如 `R50_onnx.onnx` 和 `WIDERFace_DSFD_RES152.pth`。
-- 私有加密 Engine、商业 SDK、受许可限制的模型及人脸数据默认不公开。
-- 导出缓存、训练中间产物和 TensorRT plan 应记录生成环境，避免跨硬件假兼容。
+CARSDetect、CARS1/2/3 等旧 SDK 的私有封装、解密和许可要求单独记录，禁止未经授权复制上游源码/模型。
 
-## Phase 4：统一评测与去重
+## Phase 4：统一评测、去重和权重管理
 
-统一检测 bbox、score、可选五点关键点 API；在同一数据集及固定策略下测试 Accuracy/Recall/latency/memory。完成核验后才决定保留的基线版本，**不自动删除本地其他备份**。
+- 训练方面：数据协议、配置、种子、训练损失、验证 AP/Recall、运行环境、检查点 SHA256。
+- 推理方面：模型前后处理、bbox/score/landmarks、输出一致性、速度 P50/P95、峰值内存和硬件。
+- 同名文件 SHA256 相同才可视作字节副本；部署格式与训练版本的对应需另外证明。
+- 模型权重默认不纳入普通 Git；大型公开权重可在许可适当时采用 LFS/外部制品库；人脸照片、私有 SDK、加密 Engine 不公开。
 
-## 公有索引与私有路径
+## 本地私有登记
 
-`catalog/model_candidates.csv`：安全的候选清单，无完整私有磁盘路径。
+`catalog/model_candidates.csv`：本次候选索引，无完整私人路径。
 
-`catalog/local_paths.csv`：用户私有映射；**不要提交**，参见 `catalog/local_paths.template.csv`。
+`catalog/local_paths.csv`：私有绝对路径表；按模板填写，不提交。
 
-`artifacts/local_hash_report.csv`：本地哈希结果；不要提交。
+`artifacts/local_hash_report.csv`：哈希报告；不提交。
+
+`catalog/implementation_status.csv`：训练/推理/导出源码及验证状态；更新时记录明确的源码或测试证据。

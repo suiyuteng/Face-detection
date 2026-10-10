@@ -1,0 +1,12 @@
+family,training_code_in_repository,inference_code_in_repository,training_code_local_candidate,inference_code_local_candidate,export_or_deploy_local_candidate,train_runtime_verified,infer_runtime_verified,notes
+mtcnn,yes,yes,unknown,unknown,unknown,no,no,PNet/RNet/ONet training scripts and MTCNN.py exist; dataset path ../dataset not in repository; actual runnable status not tested
+retinaface,no,no,not_found_in_targeted_scan,yes,yes,no,no,Local legacy RetinaFace C++/TRT and MXNet2Caffe; local TensorRTx inference; ONNX weights; training source still to be located
+cars-sdk,no,no,unknown,local_sdk_only,local_private_sdk_only,no,no,Encrypted SDK detectors may lack redistribution rights and training source
+centerface,no,no,unknown,unknown,local_onnx_ncnn_tensorrt_models,no,no,Local model artifacts; inference and training source need review
+ultraface,no,no,unknown,unknown,local_onnx_pytorch_artifacts,no,no,Local variants Slim/RFB; verify source and dependencies
+faceboxes,no,no,unknown,unknown,local_caffe_pytorch_models,no,no,Local models and variants; code has not been reviewed
+yunet,no,no,unknown,unknown,local_caffe_onnx_models,no,no,YuFaceDetect/YuNet versions require distinct architecture verification
+dsfd,no,no,unknown,unknown,local_pytorch_weights,no,no,Training source and license need inspection
+yolov5-face,no,no,unknown,unknown,local_onnx_models,no,no,No training and inference code yet committed
+blazeface,no,no,unknown,unknown,local_tflite_onnx_tensorrt,no,no,May be based on MediaPipe; training source status unknown
+opencv-ssd,no,no,unknown,unknown,local_caffe_models,no,no,Legacy baseline; training source status unknown

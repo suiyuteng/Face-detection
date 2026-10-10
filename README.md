@@ -1,44 +1,69 @@
 # Face-detection
 
-人脸检测算法与模型资产目录（Face Detection Model Collection）。
+**人脸检测：训练 + 推理 + 模型导出 + 统一评测**（Face Detection: Training, Inference & Benchmarking）
 
-> **状态说明**：当前仓库已有一套 MTCNN PyTorch 代码与 PNet/RNet/ONet 权重；其他检测器暂时只建立**本地文件索引和整理位置**，并非全部已上传或已验证可运行。
+> 仓库目标不是只收集推理权重：每个算法家族都希望最终保留可复现的训练配置、训练实现、推理实现及评测记录。但**代码已发现**、**已提交**和**已验证可运行**是三种不同状态；请查看 [实现状态表](catalog/implementation_status.csv)。
 
-## 已有实现
+## 目前已有的训练和推理代码
 
-- [MTCNN-pytorch/](MTCNN-pytorch/)：保留原有代码、训练脚本和 3 个 `.pkl` 权重；不改变旧工程路径。
-- [detectors/mtcnn/](detectors/mtcnn/)：统一算法目录入口，指向上述现有实现。
+| 家族 | 训练 | 推理 | 导出/部署 | 当前状态 |
+|---|---|---|---|---|
+| MTCNN PyTorch | [三个训练入口](MTCNN-pytorch/) + [数据生成](MTCNN-pytorch/data_gen/) | [MTCNN.py](MTCNN-pytorch/MTCNN.py) | 未验证 | 代码和 P/R/O 三阶段权重已在仓库；**本仓库没有配套完整训练数据，训练/推理端到端尚未复现** |
+| RetinaFace MNet / R50 | 本次本地清单尚未发现完整训练入口 | 本地 C++/TensorRT 实现（**未迁入**） | 本地 MXNet→Caffe、ONNX 文件、INT8 校准（**未迁入**） | [文件盘点](detectors/retinaface/)，尚需源码、来源许可和输入输出验证 |
+| 其他算法 | 待排查 | 待迁入 | 待排查 | 当前只登记模型及算法来源，不算完整实现 |
 
-## 检测算法目录
+## 计划采用的工程布局
 
-- [RetinaFace](detectors/retinaface/) — ResNet-50；MobileNet-0.25；FaceX-Zoo SDK
-- [MTCNN](detectors/mtcnn/) — PNet / RNet / ONet；det1–det4；历史检查点
-- [CARS SDK detectors](detectors/cars-sdk/) — CARSDetect（58 路径）；CARS1/2/3（42 路径，类型待确认）
-- [CenterFace](detectors/centerface/) — 原版、BN merged；ONNX/NCNN/TensorRT
-- [FaceBoxes](detectors/faceboxes/) — 标准版、without-dense
-- [YuNet / YuFaceDetect](detectors/yunet/) — v1、v2、ONNX 变体
-- [UltraFace](detectors/ultraface/) — Slim/Tiny、RFB，320/640
-- [DSFD](detectors/dsfd/) — ResNet-152、R18、Light DSFD
-- [YOLOv5-Face](detectors/yolov5-face/) — Small、Medium、Large
-- [BlazeFace / MediaPipe face detection](detectors/blazeface/) — short-range / full-range；TFLite/ONNX/TRT
-- [OpenCV SSD face detector](detectors/opencv-ssd/) — ResNet-10 SSD
+```text
+Face-detection/
+  MTCNN-pytorch/                 # 原有完整历史目录：先不移动
+  detectors/
+    mtcnn/                       # 当前指向历史目录
+    retinaface/
+      README.md                  # 当前只有文档和模型索引
+      train/                     # 后续：训练入口、模型结构、loss/配置
+      inference/                 # 后续：PyTorch/ONNX/Caffe/TensorRT 推理
+      export/                    # 后续：导出、校验、量化
+      tests/                     # 后续：前后处理与数值一致性
+    centerface/ ...              # 其他算法将逐步采用同一规范
+  datasets/                      # 只存数据说明和适配器，不存人脸照片
+  catalog/                       # 模型版本、源码来源、SHA256 和实现状态
+  docs/                          # 训练/推理规范、迁移和实验
+  benchmarks/                    # 统一评测协议与未来的脚本、结果
+  scripts/                       # 本地只读权重核验
+```
 
-## 资产盘点与实验约定
+**注意：**上图中 `train/`、`inference/`、`export/` 等是**目标布局**；对于 RetinaFace 尚未实际创建和填入代码，不能视为已经实现。
 
-- [docs/INVENTORY.md](docs/INVENTORY.md)：本地扫描结果、家族分布和证据等级
-- [catalog/model_candidates.csv](catalog/model_candidates.csv)：代表性文件索引（**不是已加入 Git 的权重清单**）
-- [docs/MIGRATION.md](docs/MIGRATION.md)：按来源、版本和授权逐步迁入
-- [docs/BENCHMARK.md](docs/BENCHMARK.md)：统一精度、速度、内存评测标准
-- [scripts/verify_local_assets.ps1](scripts/verify_local_assets.ps1)：在本地只读检查文件和 SHA256
+## 模型家族
 
-本地位置映射填写到 `catalog/local_paths.csv`（仓库忽略、不公开），格式见 [catalog/local_paths.template.csv](catalog/local_paths.template.csv)。
+- [MTCNN](detectors/mtcnn/)
+- [RetinaFace R50 / MobileNet](detectors/retinaface/)
+- [CenterFace](detectors/centerface/)
+- [UltraFace](detectors/ultraface/)
+- [FaceBoxes](detectors/faceboxes/)
+- [YuNet / YuFaceDetect](detectors/yunet/)
+- [DSFD](detectors/dsfd/)
+- [YOLOv5-Face](detectors/yolov5-face/)
+- [BlazeFace](detectors/blazeface/)
+- [OpenCV SSD](detectors/opencv-ssd/)
+- [CARS SDK 旧模型](detectors/cars-sdk/)（来源与训练权属待确认）
 
-## 整理原则
+## 文档导航
 
-1. **按算法家族归档**，区分训练版本和 ONNX/Caffe/NCNN/TRT 等部署格式。
-2. **原始项目先保留**；确认来源、运行方式、许可证后再迁移其他代码。
-3. **不默认提交本地模型权重、第三方 SDK 或私有人脸数据**。超过 GitHub 单文件限制的权重应在授权许可后使用 Git LFS 或外部制品库。
-4. **不使用文件名/文件大小判定重复**。SHA256 相同才是字节级副本；结构/特征行为是否相同须单独验证。
-5. **不混淆检测与识别**：DenseNet CARSFace、MobileFaceNet 人脸特征模型继续留在识别项目，不纳入本检测仓库。
+- **[训练、推理及导出约定](docs/TRAINING_INFERENCE.md)**：每个家族的训练/推理/测试资料放哪里
+- [迁移计划](docs/MIGRATION.md)：分阶段补齐缺失实现
+- [模型盘点](docs/INVENTORY.md)：来自本地快照的模型线索
+- [RetinaFace 本地源码检查](docs/RETINAFACE_REVIEW.md)：已发现哪些，尚缺什么
+- [统一检测评测](docs/BENCHMARK.md)：精度与部署性能对比
+- [模型候选清单](catalog/model_candidates.csv) 和 [实现状态](catalog/implementation_status.csv)
+- [本地 SHA256 只读检查](scripts/verify_local_assets.ps1)
 
-本次目录盘点基于 2026-10-10 的 `model_search.csv` 文件搜索快照（16,617 条记录）。它不是全盘内容证明，也不是模型性能测试结果。
+## 代码和数据管理原则
+
+1. **以算法家族为单位**：培训和推理共享模型定义、预处理和配置来源；ONNX/Caffe/TensorRT 是部署方式，不应被误当独立算法。
+2. 训练代码必须有可复现配置、数据格式说明、模型输出/检查点约定；推理代码必须有可跑的单张图片验证与可比输出。
+3. **先保留旧项目**：原 `MTCNN-pytorch/` 路径、代码与权重未移动或删除，避免破坏原相对导入。
+4. **不能只复制权重却声称训练代码齐全**：无源训练实现的模型明确标识为 `inference-only` 或 `weights-only`。
+5. 不公开私有人脸数据、未获授权的第三方源码、加密 SDK 或私有模型；大型/许可受限权重只登记校验和、来源与获取方式。
+6. [本地路径映射模板](catalog/local_paths.template.csv) 可复制为 `catalog/local_paths.csv` 仅用于本机，该文件被 Git 忽略。
