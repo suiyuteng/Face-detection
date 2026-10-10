@@ -1,0 +1,13 @@
+# Private machine-specific path maps and downloaded assets
+/catalog/local_paths.csv
+/local_assets/
+/artifacts/
+
+# Generated runtime caches and local environments
+*.cache
+*.engine
+*.plan
+*.trt
+__pycache__/
+*.pyc
+.venv/
